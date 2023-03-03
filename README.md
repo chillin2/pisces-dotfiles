@@ -3,10 +3,13 @@ My wsl workflow for coding
 
 ## Requirement  
 neovim  
-fish shell  
-peco  
-ghq  
-exa  
+fish shell ( User friendly interactive shell )  
+fisher ( Plugin manager for Fish )  
+shellder ( Shell theme )  
+peco ( Interactive filtering tool )  
+exa ( A mordern replacement for 'ls' )
+ghq ( Local Git repository oganizer )
+z ( Directory jumping )  
 
 
 sudo apt-add-repository ppa:fish-shell/release-3  
