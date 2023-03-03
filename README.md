@@ -17,4 +17,4 @@ git clone https://github.com/x-motemen/ghq
 cd ghq  
 make install  
 
-
+sudo apt install exa  
