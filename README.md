@@ -6,9 +6,9 @@ neovim
 fish shell ( User friendly interactive shell )  
 fisher ( Plugin manager for Fish )  
 shellder ( Shell theme )  
-peco ( Interactive filtering tool )  
-exa ( A mordern replacement for 'ls' )
-ghq ( Local Git repository oganizer )
+peco ( Interactive filtering tool )    
+exa ( A mordern replacement for 'ls' )  
+ghq ( Local Git repository oganizer )  
 z ( Directory jumping )  
 
 
