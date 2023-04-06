@@ -1,3 +1,4 @@
+vim.cmd("autocmd!")
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -7,13 +8,16 @@ vim.opt.fencs = { 'cp949', 'utf-8', 'ucs-bom' }
 
 vim.opt.shell = 'fish'
 
-vim.opt.cindent = true
+--[[ vim.opt.cindent = true ]]
+vim.opt.autoindent = true
 vim.opt.smartindent = true
+vim.opt.smarttab = true
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.breakindent = true
 
+vim.opt.wrap = false -- No Wrap lines
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
