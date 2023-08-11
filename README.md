@@ -1,5 +1,7 @@
 # pisces-dotfiles  
 My wsl workflow for coding  
+-------------------------------------------------  
+git clone https://github.com/chillin2/pisces-dotfiles.git ./.config
 
 ## Requirement  
 neovim  
