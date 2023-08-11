@@ -441,6 +441,8 @@ require("gruvbox").setup({
 vim.cmd("colorscheme gruvbox")
 
 -- indent_blankline setup
+vim.opt.list = true
+vim.opt.listchars:append "trail:⋅"
 vim.opt.termguicolors = true
 vim.cmd [[highlight IndentBlanklineIndent1 guibg=#1f1f1f gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent2 guibg=#1a1a1a gui=nocombine]]
