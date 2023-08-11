@@ -8,14 +8,13 @@ vim.opt.fencs = { 'cp949', 'utf-8', 'ucs-bom' }
 
 vim.opt.shell = 'fish'
 
---[[ vim.opt.cindent = true ]]
+vim.opt.cindent = true
 vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.smarttab = true
+-- vim.opt.smartindent = true
+-- vim.opt.smarttab = true
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
-vim.opt.breakindent = true
 
 vim.opt.wrap = false -- No Wrap lines
 -- [[ Setting options ]]
@@ -56,3 +55,4 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
+vim.o.background = "dark" -- or "light" for light mode
