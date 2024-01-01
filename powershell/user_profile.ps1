@@ -12,6 +12,10 @@ Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -BellStyle None
 Set-PSReadLineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
 Set-PSReadLineOption -PredictionSource History
+#Set-PSReadLineKeyHandler -Key 'Ctrl+f' -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Key 'Ctrl+h' -Function BackwardChar
+Set-PSReadLineKeyHandler -Key 'Ctrl+l' -Function ForwardChar
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 
 # Fzf
 Import-Module PSFzf
