@@ -1,24 +1,27 @@
-# pisces-dotfiles  
-My wsl workflow for coding  
--------------------------------------------------  
-git clone https://github.com/chillin2/pisces-dotfiles.git ./.config
+# pisces-dotfiles
 
-## Requirement  
+My wsl workflow for coding
+
+---
+
+git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
+
+## Requirement
+
 neovim  
 fish shell ( User friendly interactive shell )  
 fisher ( Plugin manager for Fish )  
 shellder ( Shell theme )  
-peco ( Interactive filtering tool )    
+peco ( Interactive filtering tool )  
 exa ( A mordern replacement for 'ls' )  
 ghq ( Local Git repository oganizer )  
-z ( Directory jumping )  
-
+z ( Directory jumping )
 
 sudo apt-add-repository ppa:fish-shell/release-3  
 sudo apt update  
-sudo apt install fish  
+sudo apt install fish
 
-sudo apt install peco  
+sudo apt install peco
 
 cd ~  
 curl -OL https://golang.org/dl/go1.20.1.linux-amd64.tar.gz  
@@ -27,10 +30,10 @@ sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz
 sudo nano ~/.profile  
 export PATH=$PATH:/usr/local/go/bin  
 source ~/.profile  
-go version  
+go version
 
 git clone https://github.com/x-motemen/ghq  
 cd ghq  
-make install  
+make install
 
-sudo apt install exa  
+sudo apt install exa
