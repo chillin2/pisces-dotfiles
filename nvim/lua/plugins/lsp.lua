@@ -1,8 +1,3 @@
 return {
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      autoformat = false,
-    },
-  },
+  require("lspconfig").clangd.setup({}),
 }
