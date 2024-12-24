@@ -8,7 +8,7 @@
 -- })
 
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  pattern = { "*.c" },
+  pattern = { "*.c", "*.h", "*.md", "*.json" },
   command = [[%s/\s\+$//e]],
 })
 
