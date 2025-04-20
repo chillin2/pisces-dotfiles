@@ -1,40 +1,58 @@
 # pisces-dotfiles
 
-My Dev workflow for WSL
+[Install]
 
----
+```git clone https://github.com/chillin2/pisces-jwk-dotfiles.git ~/.config
 
-git clone https://github.com/chillin2/pisces-jwk-dotfiles.git ~/.config
+## Contents
 
-## Requirement
+- vim (Neovim) config
+- fish config
+- PowerShell config
 
-neovim  
-fish shell ( User friendly interactive shell )  
-fisher ( Plugin manager for Fish )  
-shellder ( Shell theme )  
-peco ( Interactive filtering tool )  
-exa ( A mordern replacement for 'ls' )  
-ghq ( Local Git repository oganizer )  
-z ( Directory jumping )  
+## Neovim setup
 
-sudo apt-add-repository ppa:fish-shell/release-3  
-sudo apt update  
-sudo apt install fish  
+### Requirements
 
-sudo apt install peco  
+- Neovim >= **0.9.0** (needs to be built with **LuaJIT**)
+- Git >= **2.19.0** (for partial clones support)
+- [LazyVim](https://www.lazyvim.org/)
+- a [Nerd Font](https://www.nerdfonts.com/)(v3.0 or greater) **_(optional, but needed to display some icons)_**
+- [lazygit](https://github.com/jesseduffield/lazygit) **_(optional)_**
+- a **C** compiler for `nvim-treesitter`. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
+- for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) **_(optional)_**
+  - **live grep**: [ripgrep](https://github.com/BurntSushi/ripgrep)
+  - **find files**: [fd](https://github.com/sharkdp/fd)
+- a terminal that support true color and *undercurl*:
+  - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & Macos)_**
+  - [wezterm](https://github.com/wez/wezterm) **_(Linux, Macos & Windows)_**
+  - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, Macos & Windows)_**
+  - [iterm2](https://iterm2.com/) **_(Macos)_**
 
-cd ~  
-curl -OL https://golang.org/dl/go1.20.1.linux-amd64.tar.gz  
-sha256sum go1.20.1.linux-amd64.tar.gz  
-sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz  
-nvim ~/.profile  
-export PATH=$PATH:/usr/local/go/bin  
-source ~/.profile  
-go version  
+## Shell setup (macOS & Linux)
 
-git clone https://github.com/x-motemen/ghq  
-cd ghq  
-make install  
+- [Fish shell](https://fishshell.com/)
+- [Fisher](https://github.com/jorgebucaran/fisher) - Plugin manager
+- [Tide](https://github.com/IlanCosman/tide) - Shell theme
+- [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) - Patched fonts for development-use. I use [PlemolJP](https://github.com/yuru7/PlemolJP) and BlexMono.
+- [z for fish](https://github.com/jethrokuan/z) - Directory jumping
+- [Eza](https://github.com/eza-community/eza) - `ls` replacement
+- [ghq](https://github.com/x-motemen/ghq) - Local Git repository organizer
+- [fzf](https://github.com/PatrickF1/fzf.fish) - Interactive filtering
 
-sudo apt install eza  
-sudo apt install tree-sitter-cli  
+## PowerShell setup (Windows)
+
+- [Scoop](https://scoop.sh/) - A command-line installer
+- [Git for Windows](https://gitforwindows.org/)
+- [Oh My Posh](https://ohmyposh.dev/) - Prompt theme engine
+- [Terminal Icons](https://github.com/devblackops/Terminal-Icons) - Folder and file icons
+- [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/) - Cmdlets for customizing the editing environment, used for autocompletion
+- [z](https://www.powershellgallery.com/packages/z) - Directory jumper
+- [PSFzf](https://github.com/kelleyma49/PSFzf) - Fuzzy finder
+
+
+## About me
+
+- [@inkdrop_app on X](https://twitter.com/inkdrop_app)
+- [Newsletters](https://www.devas.life/)
+- [My product: Inkdrop - Markdown note-taking app](https://www.inkdrop.app/)
