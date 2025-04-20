@@ -1,6 +1,6 @@
 
 
-##[Installation]
+## Install 
 
 ```
 git clone https://github.com/chillin2/pisces-jwk-dotfiles.git ~/.config
@@ -55,6 +55,5 @@ git clone https://github.com/chillin2/pisces-jwk-dotfiles.git ~/.config
 
 ## About me
 
-- [@inkdrop_app on X](https://twitter.com/inkdrop_app)
-- [Newsletters](https://www.devas.life/)
-- [My product: Inkdrop - Markdown note-taking app](https://www.inkdrop.app/)
+- [Email:chilin2@naver.com](chillin2@naver.com)
+- [Insta:jw_just_chillin](https://www.instagram.com/jw_just_chillin/)
