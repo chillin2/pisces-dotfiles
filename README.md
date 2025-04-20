@@ -1,8 +1,10 @@
-# pisces-dotfiles
 
-[Install]
 
-```git clone https://github.com/chillin2/pisces-jwk-dotfiles.git ~/.config
+##[Installation]
+
+```
+git clone https://github.com/chillin2/pisces-jwk-dotfiles.git ~/.config
+```
 
 ## Contents
 
