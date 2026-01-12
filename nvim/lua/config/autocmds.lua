@@ -14,6 +14,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   callback = function()
     -- 줄 끝 공백 제거
     vim.cmd([[%s/\s\+$//e]])
+	vim.cmd([[%s/\r$//e]])
   end,
 })
 
@@ -23,3 +24,4 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.b.autoformat = false
   end,
 })
+
