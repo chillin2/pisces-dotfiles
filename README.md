@@ -31,6 +31,33 @@ Optional switches:
 
 If `winget` is unavailable, install or update **App Installer** from Microsoft Store first.
 
+### macOS and Ubuntu one-shot setup
+
+Run this command in Terminal on macOS or Ubuntu:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.sh | bash
+```
+
+The installer automatically detects macOS or Ubuntu and:
+
+- installs Homebrew (and the required Ubuntu build tools)
+- installs Git, Neovim, Fish, ripgrep, fd, fzf, lazygit, eza, bat, ghq and LLVM
+- clones or updates this repository at `~/.config`
+- installs Fisher, Tide, z, fzf.fish and nvm.fish
+- synchronizes LazyVim plugins
+- changes the login shell to Fish
+- installs PlemolJP NF and BlexMono Nerd Font on macOS
+
+On a fresh Mac, the first run may open the Xcode Command Line Tools installer. Finish that installation and run the same command again.
+
+Optional switches:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.sh -o /tmp/pisces-install.sh
+bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
+```
+
 ## Contents
 
 - vim (Neovim) config
