@@ -58,13 +58,20 @@ function ccdb {
     $projects = @(Get-ChildItem $ewarmDirectory -Filter "*.ewp" -File -ErrorAction SilentlyContinue)
 
     if ($projects.Count -gt 1) {
-      Write-Host "Multiple IAR projects were found:"
-      $projects | ForEach-Object { Write-Host "  $($_.FullName)" }
-      Write-Host "Run: ccdb -Project '<path-to-ewp>'"
-      return
-    }
+      $preferredProjects = @($projects | Where-Object { $_.Name -match " - 850\.ewp$" })
 
-    $projectFile = $projects | Select-Object -First 1
+      if ($preferredProjects.Count -eq 1) {
+        $projectFile = $preferredProjects[0]
+        Write-Host "Selected IAR 8.50 project: $($projectFile.Name)"
+      } else {
+        Write-Host "Multiple IAR projects were found:"
+        $projects | ForEach-Object { Write-Host "  $($_.FullName)" }
+        Write-Host "Run: ccdb -Project '<path-to-ewp>'"
+        return
+      }
+    } else {
+      $projectFile = $projects | Select-Object -First 1
+    }
   }
 
   if (-not $projectFile) {
