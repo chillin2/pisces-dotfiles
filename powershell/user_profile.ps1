@@ -33,6 +33,48 @@ Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 
 # Utilities
+# Generate compile_commands.json for the IAR project in .\EWARM
+function ccdb {
+  param(
+    [string]$Project,
+    [string]$Configuration = "CM7"
+  )
+
+  $iarCandidates = @(
+    Get-Item "C:\iar\ewarm-*\common\bin\iarbuild.exe" -ErrorAction SilentlyContinue
+    Get-Item "C:\Program Files\IAR Systems\Embedded Workbench*\common\bin\IarBuild.exe" -ErrorAction SilentlyContinue
+  ) | Sort-Object LastWriteTime -Descending
+
+  $iarbuild = $iarCandidates | Select-Object -First 1
+  if (-not $iarbuild) {
+    Write-Error "iarbuild.exe was not found."
+    return
+  }
+
+  if ($Project) {
+    $projectFile = Get-Item $Project -ErrorAction SilentlyContinue
+  } else {
+    $ewarmDirectory = Join-Path (Get-Location) "EWARM"
+    $projects = @(Get-ChildItem $ewarmDirectory -Filter "*.ewp" -File -ErrorAction SilentlyContinue)
+
+    if ($projects.Count -gt 1) {
+      Write-Host "Multiple IAR projects were found:"
+      $projects | ForEach-Object { Write-Host "  $($_.FullName)" }
+      Write-Host "Run: ccdb -Project '<path-to-ewp>'"
+      return
+    }
+
+    $projectFile = $projects | Select-Object -First 1
+  }
+
+  if (-not $projectFile) {
+    Write-Error "An IAR .ewp project was not found. Run this command from the project root or specify -Project."
+    return
+  }
+
+  & $iarbuild.FullName $projectFile.FullName -jsondb $Configuration -output compile_commands.json
+}
+
 function which ($command) {
   Get-Command -Name $command -ErrorAction SilentlyContinue |
     Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
