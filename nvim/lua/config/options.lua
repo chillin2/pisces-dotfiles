@@ -5,6 +5,13 @@ vim.scriptencoding = "utf-8"
 vim.opt.encoding = "utf-8"
 vim.opt.fencs = { "utf-8", "cp949", "ucs-bom" }
 
+-- Prefer native line endings while still detecting files from other operating systems
+if vim.fn.has("win32") == 1 then
+  vim.opt.fileformats = { "dos", "unix" }
+else
+  vim.opt.fileformats = { "unix", "dos" }
+end
+
 -- vim.opt.winbar = "%=%m %f"
 vim.opt.autoindent = true
 vim.opt.smartindent = true
