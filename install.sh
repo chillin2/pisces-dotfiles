@@ -106,6 +106,9 @@ BREW_PACKAGES=(
 )
 brew install "${BREW_PACKAGES[@]}"
 
+step "Configuring Git line endings"
+git config --global core.autocrlf input
+
 if [[ "$PLATFORM" == "macos" && "$SKIP_FONT" -eq 0 ]]; then
     step "Installing Nerd Fonts"
     brew install --cask font-plemol-jp-nf font-blex-mono-nerd-font
