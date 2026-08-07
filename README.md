@@ -1,10 +1,35 @@
-
-
 ## Install
 
-```
+```sh
 git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
 ```
+
+### Windows one-shot setup
+
+Run this command in Windows PowerShell on a new Windows PC:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1 | iex
+```
+
+The installer:
+
+- installs PowerShell 7, Windows Terminal, Git, Neovim and CLI dependencies with `winget`
+- installs the required PowerShell modules
+- clones or updates this repository at `~/.config`
+- sets `XDG_CONFIG_HOME` so Neovim uses `~/.config/nvim`
+- connects both PowerShell 7 and Windows PowerShell profiles
+- backs up an existing profile before changing it
+- installs Meslo Nerd Font and synchronizes LazyVim plugins
+- can be run again safely to update the setup
+
+Optional switches:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1))) -SkipFont -SkipNeovimSync
+```
+
+If `winget` is unavailable, install or update **App Installer** from Microsoft Store first.
 
 ## Contents
 
@@ -16,27 +41,27 @@ git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
 
 ### Requirements
 
-- Neovim >= **0.9.0** (needs to be built with **LuaJIT**)
-- Git >= **2.19.0** (for partial clones support)
+- Neovim >= **0.9.0** (needs to be built with **LuaJIT**)
+- Git >= **2.19.0** (for partial clones support)
 - [LazyVim](https://www.lazyvim.org/)
-- a [Nerd Font](https://www.nerdfonts.com/)(v3.0 or greater) **_(optional, but needed to display some icons)_**
-- [lazygit](https://github.com/jesseduffield/lazygit) **_(optional)_**
-- a **C** compiler for `nvim-treesitter`. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
-- for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) **_(optional)_**
-  - **live grep**: [ripgrep](https://github.com/BurntSushi/ripgrep)
-  - **find files**: [fd](https://github.com/sharkdp/fd)
-- a terminal that support true color and *undercurl*:
-  - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & Macos)_**
-  - [wezterm](https://github.com/wez/wezterm) **_(Linux, Macos & Windows)_**
-  - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, Macos & Windows)_**
-  - [iterm2](https://iterm2.com/) **_(Macos)_**
+- a [Nerd Font](https://www.nerdfonts.com/) (v3.0 or greater) **_(optional, but needed to display some icons)_**
+- [lazygit](https://github.com/jesseduffield/lazygit) **_(optional)_**
+- a **C** compiler for `nvim-treesitter`. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
+- for `telescope.nvim` **_(optional)_**
+  - **live grep**: [ripgrep](https://github.com/BurntSushi/ripgrep)
+  - **find files**: [fd](https://github.com/sharkdp/fd)
+- a terminal that supports true color and *undercurl*:
+  - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & macOS)_**
+  - [wezterm](https://github.com/wez/wezterm) **_(Linux, macOS & Windows)_**
+  - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, macOS & Windows)_**
+  - [iTerm2](https://iterm2.com/) **_(macOS)_**
 
 ## Shell setup (macOS & Linux)
 
 - [Fish shell](https://fishshell.com/)
 - [Fisher](https://github.com/jorgebucaran/fisher) - Plugin manager
 - [Tide](https://github.com/IlanCosman/tide) - Shell theme
-- [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) - Patched fonts for development-use. I use [PlemolJP](https://github.com/yuru7/PlemolJP) and BlexMono.
+- [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) - Patched fonts for development use. I use [PlemolJP](https://github.com/yuru7/PlemolJP) and BlexMono.
 - [z for fish](https://github.com/jethrokuan/z) - Directory jumping
 - [Eza](https://github.com/eza-community/eza) - `ls` replacement
 - [ghq](https://github.com/x-motemen/ghq) - Local Git repository organizer
@@ -44,16 +69,14 @@ git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
 
 ## PowerShell setup (Windows)
 
-- [Scoop](https://scoop.sh/) - A command-line installer
+- [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/winget/) - Application installer used by `install.ps1`
 - [Git for Windows](https://gitforwindows.org/)
 - [Oh My Posh](https://ohmyposh.dev/) - Prompt theme engine
 - [Terminal Icons](https://github.com/devblackops/Terminal-Icons) - Folder and file icons
-- [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/) - Cmdlets for customizing the editing environment, used for autocompletion
-- [z](https://www.powershellgallery.com/packages/z) - Directory jumper
+- [PSReadLine](https://learn.microsoft.com/powershell/module/psreadline/) - Command-line editing and history
 - [PSFzf](https://github.com/kelleyma49/PSFzf) - Fuzzy finder
-
 
 ## About me
 
-- [Email:chilin2@naver.com](chillin2@naver.com)
-- [Insta:jw_just_chillin](https://www.instagram.com/jw_just_chillin/)
+- [Email: chilin2@naver.com](mailto:chilin2@naver.com)
+- [Instagram: jw_just_chillin](https://www.instagram.com/jw_just_chillin/)
