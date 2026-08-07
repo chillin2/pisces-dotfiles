@@ -120,6 +120,12 @@ foreach ($package in $packages) {
 
 Refresh-Path
 
+Write-Step "Configuring Git line endings"
+git config --global core.autocrlf true
+if ($LASTEXITCODE -ne 0) {
+    throw "Could not configure Git line endings."
+}
+
 Write-Step "Installing PowerShell modules"
 if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
     Install-PackageProvider -Name NuGet -MinimumVersion "2.8.5.201" -Force | Out-Null
