@@ -121,8 +121,16 @@ foreach ($package in $packages) {
 Refresh-Path
 
 Write-Step "Installing PowerShell modules"
+if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
+    Install-PackageProvider -Name NuGet -MinimumVersion "2.8.5.201" -Force | Out-Null
+}
+
 $repository = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
-if ($repository -and $repository.InstallationPolicy -ne "Trusted") {
+if (-not $repository) {
+    Register-PSRepository -Default
+    $repository = Get-PSRepository -Name PSGallery
+}
+if ($repository.InstallationPolicy -ne "Trusted") {
     Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 }
 
@@ -170,18 +178,16 @@ if (-not (Test-Path $profileSource)) {
 
 if (-not $SkipFont) {
     Write-Step "Installing Meslo Nerd Font"
-    try {
-        oh-my-posh font install meslo
-    } catch {
+    oh-my-posh font install meslo
+    if ($LASTEXITCODE -ne 0) {
         Write-Warning "Nerd Font installation failed. Run 'oh-my-posh font install meslo' later."
     }
 }
 
 if (-not $SkipNeovimSync) {
     Write-Step "Synchronizing LazyVim plugins"
-    try {
-        nvim --headless "+Lazy! sync" +qa
-    } catch {
+    nvim --headless "+Lazy! sync" +qa
+    if ($LASTEXITCODE -ne 0) {
         Write-Warning "Neovim plugin sync did not finish. Open nvim once after restarting the terminal."
     }
 }
