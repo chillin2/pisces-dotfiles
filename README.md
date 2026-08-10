@@ -9,12 +9,13 @@ git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
 Run this command in Windows PowerShell on a new Windows PC:
 
 ```powershell
-Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1 | iex
+Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/agent/windows-scoop-cli-tools/install.ps1 | iex
 ```
 
 The installer:
 
-- installs PowerShell 7, Windows Terminal, Git, Neovim and CLI dependencies with `winget`
+- installs PowerShell 7, Windows Terminal, Git and Oh My Posh with `winget`
+- installs Scoop, then uses it for Neovim, ripgrep, fd, fzf, lazygit, eza and LLVM
 - installs the required PowerShell modules
 - clones or updates this repository at `~/.config`
 - sets `XDG_CONFIG_HOME` so Neovim uses `~/.config/nvim`
@@ -26,7 +27,7 @@ The installer:
 Optional switches:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1))) -SkipFont -SkipNeovimSync
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/agent/windows-scoop-cli-tools/install.ps1))) -SkipFont -SkipNeovimSync
 ```
 
 If `winget` is unavailable, install or update **App Installer** from Microsoft Store first.
@@ -96,7 +97,8 @@ bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
 
 ## PowerShell setup (Windows)
 
-- [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/winget/) - Application installer used by `install.ps1`
+- [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/winget/) - Installs Windows-integrated applications
+- [Scoop](https://scoop.sh/) - Installs and updates portable development tools
 - [Git for Windows](https://gitforwindows.org/)
 - [Oh My Posh](https://ohmyposh.dev/) - Prompt theme engine
 - [Terminal Icons](https://github.com/devblackops/Terminal-Icons) - Folder and file icons
