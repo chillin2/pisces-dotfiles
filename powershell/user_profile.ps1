@@ -22,6 +22,14 @@ Import-Module PSFzf
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+f' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Env
+# Prefer Scoop-managed CLI tools over bundled copies from applications such as IAR.
+$scoopShims = Join-Path $HOME "scoop\shims"
+if (Test-Path $scoopShims) {
+  $pathEntries = @($env:PATH -split ";" | Where-Object { $_ })
+  $otherEntries = @($pathEntries | Where-Object { $_.TrimEnd("\\") -ine $scoopShims.TrimEnd("\\") })
+  $env:PATH = (@($scoopShims) + $otherEntries) -join ";"
+}
+
 $env:GIT_SSH = "C:\Windows\system32\OpenSSH\ssh.exe"
 
 # Alias
