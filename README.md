@@ -14,7 +14,8 @@ Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercont
 
 The installer:
 
-- installs PowerShell 7, Windows Terminal, Git, Neovim and CLI dependencies with `winget`
+- installs PowerShell 7, Windows Terminal, Git and Oh My Posh with `winget`
+- installs Scoop, then uses it for Neovim, ripgrep, fd, fzf, lazygit, eza and LLVM
 - installs the required PowerShell modules
 - clones or updates this repository at `~/.config`
 - sets `XDG_CONFIG_HOME` so Neovim uses `~/.config/nvim`
@@ -96,7 +97,8 @@ bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
 
 ## PowerShell setup (Windows)
 
-- [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/winget/) - Application installer used by `install.ps1`
+- [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/winget/) - Installs Windows-integrated applications
+- [Scoop](https://scoop.sh/) - Installs and updates portable development tools
 - [Git for Windows](https://gitforwindows.org/)
 - [Oh My Posh](https://ohmyposh.dev/) - Prompt theme engine
 - [Terminal Icons](https://github.com/devblackops/Terminal-Icons) - Folder and file icons
