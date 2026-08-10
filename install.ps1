@@ -144,7 +144,20 @@ Write-Step "Checking Scoop"
 if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
     Write-Host "  [install] Scoop"
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
+
+    $scoopInstaller = Join-Path ([System.IO.Path]::GetTempPath()) "install-scoop.ps1"
+    Invoke-WebRequest -Uri "https://get.scoop.sh" -OutFile $scoopInstaller
+
+    try {
+        $windowsPowerShell = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
+        & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File $scoopInstaller
+        if ($LASTEXITCODE -ne 0) {
+            throw "Scoop installer exited with code $LASTEXITCODE."
+        }
+    } finally {
+        Remove-Item -Path $scoopInstaller -Force -ErrorAction SilentlyContinue
+    }
+
     Refresh-Path
 }
 
