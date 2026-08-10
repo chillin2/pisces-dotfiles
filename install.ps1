@@ -44,6 +44,33 @@ function Install-WingetPackage {
     }
 }
 
+function Install-ScoopPackage {
+    param(
+        [Parameter(Mandatory)][string]$Package,
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Command
+    )
+
+    $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $HOME "scoop" }
+    $installedPath = Join-Path $scoopRoot "apps\$Package\current"
+    if (Test-Path $installedPath) {
+        Write-Host "  [skip] $Name"
+        return
+    }
+
+    $existingCommand = Get-Command $Command -ErrorAction SilentlyContinue
+    if ($existingCommand -and $existingCommand.Source -notmatch "[\\/]scoop[\\/]shims[\\/]") {
+        Write-Warning "$Name is already installed outside Scoop: $($existingCommand.Source). Skipping to avoid a duplicate installation."
+        return
+    }
+
+    Write-Host "  [install:scoop] $Name"
+    scoop install $Package
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to install $Name with Scoop ($Package)."
+    }
+}
+
 function Install-RequiredModule {
     param([Parameter(Mandatory)][string]$Name)
 
@@ -99,23 +126,45 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     throw "winget was not found. Update or install 'App Installer' from Microsoft Store, then run this command again."
 }
 
-Write-Step "Installing command-line tools"
-$packages = @(
+Write-Step "Installing Windows applications with winget"
+$wingetPackages = @(
     @{ Id = "Microsoft.PowerShell"; Name = "PowerShell 7" },
     @{ Id = "Microsoft.WindowsTerminal"; Name = "Windows Terminal" },
     @{ Id = "Git.Git"; Name = "Git for Windows" },
-    @{ Id = "Neovim.Neovim"; Name = "Neovim" },
-    @{ Id = "JanDeDobbeleer.OhMyPosh"; Name = "Oh My Posh" },
-    @{ Id = "BurntSushi.ripgrep.MSVC"; Name = "ripgrep" },
-    @{ Id = "sharkdp.fd"; Name = "fd" },
-    @{ Id = "junegunn.fzf"; Name = "fzf" },
-    @{ Id = "JesseDuffield.lazygit"; Name = "lazygit" },
-    @{ Id = "eza-community.eza"; Name = "eza" },
-    @{ Id = "LLVM.LLVM"; Name = "LLVM" }
+    @{ Id = "JanDeDobbeleer.OhMyPosh"; Name = "Oh My Posh" }
 )
 
-foreach ($package in $packages) {
+foreach ($package in $wingetPackages) {
     Install-WingetPackage -Id $package.Id -Name $package.Name
+}
+
+Refresh-Path
+
+Write-Step "Checking Scoop"
+if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+    Write-Host "  [install] Scoop"
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
+    Refresh-Path
+}
+
+if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+    throw "Scoop installation finished, but the scoop command was not found."
+}
+
+Write-Step "Installing development tools with Scoop"
+$scoopPackages = @(
+    @{ Package = "neovim"; Name = "Neovim"; Command = "nvim" },
+    @{ Package = "ripgrep"; Name = "ripgrep"; Command = "rg" },
+    @{ Package = "fd"; Name = "fd"; Command = "fd" },
+    @{ Package = "fzf"; Name = "fzf"; Command = "fzf" },
+    @{ Package = "lazygit"; Name = "lazygit"; Command = "lazygit" },
+    @{ Package = "eza"; Name = "eza"; Command = "eza" },
+    @{ Package = "llvm"; Name = "LLVM"; Command = "clang" }
+)
+
+foreach ($package in $scoopPackages) {
+    Install-ScoopPackage -Package $package.Package -Name $package.Name -Command $package.Command
 }
 
 Refresh-Path
