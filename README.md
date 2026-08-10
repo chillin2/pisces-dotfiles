@@ -9,7 +9,7 @@ git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
 Run this command in Windows PowerShell on a new Windows PC:
 
 ```powershell
-Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/agent/windows-scoop-cli-tools/install.ps1 | iex
+Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1 | iex
 ```
 
 The installer:
@@ -27,7 +27,7 @@ The installer:
 Optional switches:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/agent/windows-scoop-cli-tools/install.ps1))) -SkipFont -SkipNeovimSync
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1))) -SkipFont -SkipNeovimSync
 ```
 
 If `winget` is unavailable, install or update **App Installer** from Microsoft Store first.
