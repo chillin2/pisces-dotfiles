@@ -1,12 +1,12 @@
-## Install
+# Pisces Dotfiles
 
-```sh
-git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
-```
+Personal development environment for Windows, macOS, and Ubuntu.
 
-### Windows one-shot setup
+## Quick Install
 
-Run this command in Windows PowerShell on a new Windows PC:
+### Windows
+
+Open **Windows PowerShell** and run:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.ps1 | iex
@@ -33,9 +33,9 @@ Optional switches:
 
 If `winget` is unavailable, install or update **App Installer** from Microsoft Store first.
 
-### macOS and Ubuntu one-shot setup
+### macOS / Ubuntu
 
-Run this command in Terminal on macOS or Ubuntu:
+Open a terminal and run:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/install.sh | bash
@@ -60,6 +60,24 @@ curl -fsSL https://raw.githubusercontent.com/chillin2/pisces-dotfiles/main/insta
 bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
 ```
 
+## Manual Install
+
+If you only want to clone the dotfiles without running the setup script, use the command for your platform.
+
+### Windows
+
+```powershell
+git clone https://github.com/chillin2/pisces-dotfiles.git "$HOME\.config"
+```
+
+### macOS / Linux
+
+```bash
+git clone https://github.com/chillin2/pisces-dotfiles.git ~/.config
+```
+
+The manual clone does not install dependencies or configure the shell automatically. For a new machine, the **Quick Install** method above is recommended.
+
 ## Contents
 
 - Neovim / LazyVim config
@@ -83,7 +101,7 @@ bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
   - **find files**: [fd](https://github.com/sharkdp/fd)
 - a terminal that supports true color and *undercurl*:
   - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & macOS)_**
-  - [wezterm](https://github.com/wez/wezterm) **_(Linux, macOS & Windows)_**
+  - [wezterm](https://github.com/wezterm/wezterm) **_(Linux, macOS & Windows)_**
   - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, macOS & Windows)_**
   - [iTerm2](https://iterm2.com/) **_(macOS)_**
 
