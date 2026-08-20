@@ -174,6 +174,7 @@ $scoopPackages = @(
     @{ Package = "lazygit"; Name = "lazygit"; Command = "lazygit" },
     @{ Package = "eza"; Name = "eza"; Command = "eza" },
     @{ Package = "bat"; Name = "bat"; Command = "bat" },
+    @{ Package = "mise"; Name = "mise"; Command = "mise" },
     @{ Package = "llvm"; Name = "LLVM"; Command = "clang" }
 )
 
