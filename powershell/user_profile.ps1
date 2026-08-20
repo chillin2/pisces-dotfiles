@@ -46,6 +46,30 @@ Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 
 # Utilities
+# Initialize the current project for Codex Python tooling without creating a Git repository.
+function init-codex {
+  if (-not (Get-Command mise -ErrorAction SilentlyContinue)) {
+    Write-Error "mise is not installed."
+    return
+  }
+
+  if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+    Write-Error "uv is not installed. Run: mise use -g uv@latest"
+    return
+  }
+
+  mise use python@3.14
+  if ($LASTEXITCODE -ne 0) { return }
+
+  uv init --vcs none
+  if ($LASTEXITCODE -ne 0) { return }
+
+  uv add openpyxl
+  if ($LASTEXITCODE -ne 0) { return }
+
+  Write-Host "Codex project environment initialized: Python 3.14 + uv + openpyxl"
+}
+
 # Generate compile_commands.json for the IAR project in .\EWARM
 function ccdb {
   param(
