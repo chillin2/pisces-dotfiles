@@ -15,12 +15,13 @@ Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercont
 The installer:
 
 - installs PowerShell 7, Windows Terminal, Git and Oh My Posh with `winget`
-- installs Scoop, then uses it for Neovim, ripgrep, fd, fzf, lazygit, eza and LLVM
+- installs Scoop, then uses it for Neovim, ripgrep, fd, fzf, lazygit, eza, bat, mise and LLVM
 - installs the required PowerShell modules
 - clones or updates this repository at `~/.config`
 - sets `XDG_CONFIG_HOME` so Neovim uses `~/.config/nvim`
 - connects both PowerShell 7 and Windows PowerShell profiles
 - backs up an existing profile before changing it
+- activates mise-managed tools automatically in PowerShell when `mise` is available
 - installs Meslo Nerd Font and synchronizes LazyVim plugins
 - can be run again safely to update the setup
 
@@ -61,9 +62,11 @@ bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
 
 ## Contents
 
-- vim (Neovim) config
-- fish config
+- Neovim / LazyVim config
+- Fish config
 - PowerShell config
+- Windows one-shot setup script
+- macOS / Ubuntu one-shot setup script
 
 ## Neovim setup
 
@@ -92,6 +95,7 @@ bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
 - [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) - Patched fonts for development use. I use [PlemolJP](https://github.com/yuru7/PlemolJP) and BlexMono.
 - [z for fish](https://github.com/jethrokuan/z) - Directory jumping
 - [Eza](https://github.com/eza-community/eza) - `ls` replacement
+- [bat](https://github.com/sharkdp/bat) - Syntax-highlighted `cat` replacement
 - [ghq](https://github.com/x-motemen/ghq) - Local Git repository organizer
 - [fzf](https://github.com/PatrickF1/fzf.fish) - Interactive filtering
 
@@ -104,6 +108,34 @@ bash /tmp/pisces-install.sh --skip-font --skip-neovim-sync --skip-shell-change
 - [Terminal Icons](https://github.com/devblackops/Terminal-Icons) - Folder and file icons
 - [PSReadLine](https://learn.microsoft.com/powershell/module/psreadline/) - Command-line editing and history
 - [PSFzf](https://github.com/kelleyma49/PSFzf) - Fuzzy finder
+- [bat](https://github.com/sharkdp/bat) - Syntax-highlighted `cat` replacement and pager-friendly file viewer
+- [mise](https://mise.jdx.dev/) - Development tool and runtime version manager
+
+### Codex / Python project helper
+
+The PowerShell profile includes an `init-codex` helper for projects where Codex needs Python tooling, such as editing Excel files with `openpyxl`.
+
+First install `uv` once through mise:
+
+```powershell
+mise use -g uv@latest
+```
+
+Then, from a project root, run:
+
+```powershell
+init-codex
+```
+
+It configures Python 3.14 for the project, initializes a uv project without creating a Git repository, and installs `openpyxl`:
+
+```text
+mise use python@3.14
+uv init --vcs none
+uv add openpyxl
+```
+
+This is useful for SVN or other non-Git projects because `uv init --vcs none` does not create a `.git` directory.
 
 ## About me
 
