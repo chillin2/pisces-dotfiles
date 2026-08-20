@@ -30,6 +30,11 @@ if (Test-Path $scoopShims) {
   $env:PATH = (@($scoopShims) + $otherEntries) -join ";"
 }
 
+# Activate mise-managed tools (uv, Python, Node, etc.) when mise is installed.
+if (Get-Command mise -ErrorAction SilentlyContinue) {
+  (&mise activate pwsh) | Out-String | Invoke-Expression
+}
+
 $env:GIT_SSH = "C:\Windows\system32\OpenSSH\ssh.exe"
 
 # Alias
