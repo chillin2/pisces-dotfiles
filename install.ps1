@@ -48,13 +48,8 @@ function Install-ScoopPackage {
     param(
         [Parameter(Mandatory)][string]$Package,
         [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)][string]$Command,
-        [string]$InstallSpec
+        [Parameter(Mandatory)][string]$Command
     )
-
-    if (-not $InstallSpec) {
-        $InstallSpec = $Package
-    }
 
     $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $HOME "scoop" }
     $installedPath = Join-Path $scoopRoot "apps\$Package\current"
@@ -70,9 +65,9 @@ function Install-ScoopPackage {
     }
 
     Write-Host "  [install:scoop] $Name"
-    scoop install $InstallSpec
+    scoop install $Package
     if ($LASTEXITCODE -ne 0) {
-        throw "Failed to install $Name with Scoop ($InstallSpec)."
+        throw "Failed to install $Name with Scoop ($Package)."
     }
 }
 
@@ -96,12 +91,7 @@ function Add-ProfileLoader {
         New-Item -ItemType Directory -Path $profileDirectory -Force | Out-Null
     }
 
-    $existing = if (Test-Path $ProfilePath) {
-        Get-Content -Raw -Path $ProfilePath
-    } else {
-        ""
-    }
-
+    $existing = if (Test-Path $ProfilePath) { Get-Content -Raw -Path $ProfilePath } else { "" }
     if ($existing -match [regex]::Escape($managedStart)) {
         Write-Host "  [skip] $ProfilePath"
         return
@@ -131,92 +121,27 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     throw "winget was not found. Update or install 'App Installer' from Microsoft Store, then run this command again."
 }
 
-Write-Step "Installing Windows applications with winget"
-$wingetPackages = @(
-    @{ Id = "Microsoft.PowerShell"; Name = "PowerShell 7" },
-    @{ Id = "Microsoft.WindowsTerminal"; Name = "Windows Terminal" },
-    @{ Id = "Git.Git"; Name = "Git for Windows" },
-    @{ Id = "JanDeDobbeleer.OhMyPosh"; Name = "Oh My Posh" }
-)
-
-foreach ($package in $wingetPackages) {
-    Install-WingetPackage -Id $package.Id -Name $package.Name
-}
-
+Write-Step "Installing bootstrap applications with winget"
+Install-WingetPackage -Id "Git.Git" -Name "Git for Windows"
 Refresh-Path
 
-Write-Step "Checking Scoop"
-if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-    Write-Host "  [install] Scoop"
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    throw "Git installation finished, but the git command was not found."
+}
 
-    $scoopInstaller = Join-Path ([System.IO.Path]::GetTempPath()) "install-scoop.ps1"
-    Invoke-WebRequest -Uri "https://get.scoop.sh" -OutFile $scoopInstaller
-
-    try {
-        $windowsPowerShell = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
-        & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File $scoopInstaller
-        if ($LASTEXITCODE -ne 0) {
-            throw "Scoop installer exited with code $LASTEXITCODE."
-        }
-    } finally {
-        Remove-Item -Path $scoopInstaller -Force -ErrorAction SilentlyContinue
+Write-Step "Downloading or updating dotfiles"
+if (Test-Path (Join-Path $configRoot ".git")) {
+    $status = git -C $configRoot status --porcelain
+    if ($LASTEXITCODE -ne 0) {
+        throw "Could not read Git status for $configRoot."
+    }
+    if ($status) {
+        throw "$configRoot has local changes. Commit, stash, or restore them before running the installer again."
     }
 
-    Refresh-Path
-}
-
-if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-    throw "Scoop installation finished, but the scoop command was not found."
-}
-
-Write-Step "Installing development tools with Scoop"
-$scoopPackages = @(
-    @{ Package = "neovim"; Name = "Neovim"; Command = "nvim" },
-    @{ Package = "ripgrep"; Name = "ripgrep"; Command = "rg" },
-    @{ Package = "fd"; Name = "fd"; Command = "fd" },
-    @{ Package = "fzf"; Name = "fzf"; Command = "fzf" },
-    @{ Package = "lazygit"; Name = "lazygit"; Command = "lazygit"; InstallSpec = "main/lazygit" },
-    @{ Package = "eza"; Name = "eza"; Command = "eza" },
-    @{ Package = "bat"; Name = "bat"; Command = "bat" },
-    @{ Package = "mise"; Name = "mise"; Command = "mise" },
-    @{ Package = "llvm"; Name = "LLVM"; Command = "clang" }
-)
-
-foreach ($package in $scoopPackages) {
-    Install-ScoopPackage -Package $package.Package -Name $package.Name -Command $package.Command -InstallSpec $package.InstallSpec
-}
-
-Refresh-Path
-
-Write-Step "Configuring Git line endings"
-git config --global core.autocrlf true
-if ($LASTEXITCODE -ne 0) {
-    throw "Could not configure Git line endings."
-}
-
-Write-Step "Installing PowerShell modules"
-if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
-    Install-PackageProvider -Name NuGet -MinimumVersion "2.8.5.201" -Force | Out-Null
-}
-
-$repository = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
-if (-not $repository) {
-    Register-PSRepository -Default
-    $repository = Get-PSRepository -Name PSGallery
-}
-if ($repository.InstallationPolicy -ne "Trusted") {
-    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-}
-
-@("posh-git", "Terminal-Icons", "PSFzf", "PSReadLine") |
-    ForEach-Object { Install-RequiredModule -Name $_ }
-
-Write-Step "Downloading dotfiles"
-if (Test-Path (Join-Path $configRoot ".git")) {
     git -C $configRoot pull --ff-only
     if ($LASTEXITCODE -ne 0) {
-        throw "Could not update $configRoot. Check its Git status."
+        throw "Could not update $configRoot. Check whether the local branch can be fast-forwarded."
     }
 } elseif (Test-Path $configRoot) {
     $items = @(Get-ChildItem -Force -Path $configRoot)
@@ -232,6 +157,97 @@ if ($LASTEXITCODE -ne 0) {
     throw "Could not clone the dotfiles repository."
 }
 
+Write-Step "Configuring Git line endings"
+git config --global core.autocrlf true
+if ($LASTEXITCODE -ne 0) {
+    throw "Could not configure Git line endings."
+}
+
+Write-Step "Installing Windows applications with winget"
+$wingetPackages = @(
+    @{ Id = "Microsoft.PowerShell"; Name = "PowerShell 7" },
+    @{ Id = "Microsoft.WindowsTerminal"; Name = "Windows Terminal" },
+    @{ Id = "JanDeDobbeleer.OhMyPosh"; Name = "Oh My Posh" }
+)
+foreach ($package in $wingetPackages) {
+    Install-WingetPackage -Id $package.Id -Name $package.Name
+}
+Refresh-Path
+
+Write-Step "Checking Scoop"
+if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+    Write-Host "  [install] Scoop"
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    $scoopInstaller = Join-Path ([System.IO.Path]::GetTempPath()) "install-scoop.ps1"
+    Invoke-WebRequest -Uri "https://get.scoop.sh" -OutFile $scoopInstaller
+    try {
+        $windowsPowerShell = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
+        & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File $scoopInstaller
+        if ($LASTEXITCODE -ne 0) { throw "Scoop installer exited with code $LASTEXITCODE." }
+    } finally {
+        Remove-Item -Path $scoopInstaller -Force -ErrorAction SilentlyContinue
+    }
+    Refresh-Path
+}
+if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+    throw "Scoop installation finished, but the scoop command was not found."
+}
+
+Write-Step "Installing development tools with Scoop"
+$scoopPackages = @(
+    @{ Package = "neovim"; Name = "Neovim"; Command = "nvim" },
+    @{ Package = "ripgrep"; Name = "ripgrep"; Command = "rg" },
+    @{ Package = "fd"; Name = "fd"; Command = "fd" },
+    @{ Package = "fzf"; Name = "fzf"; Command = "fzf" },
+    @{ Package = "eza"; Name = "eza"; Command = "eza" },
+    @{ Package = "bat"; Name = "bat"; Command = "bat" },
+    @{ Package = "mise"; Name = "mise"; Command = "mise" },
+    @{ Package = "llvm"; Name = "LLVM"; Command = "clang" }
+)
+foreach ($package in $scoopPackages) {
+    Install-ScoopPackage -Package $package.Package -Name $package.Name -Command $package.Command
+}
+Refresh-Path
+
+Write-Step "Installing lazygit"
+$lazygitPath = Join-Path (if ($env:SCOOP) { $env:SCOOP } else { Join-Path $HOME "scoop" }) "apps\lazygit\current"
+if (Test-Path $lazygitPath) {
+    Write-Host "  [skip] lazygit"
+} elseif (Get-Command lazygit -ErrorAction SilentlyContinue) {
+    Write-Host "  [skip] lazygit (already available)"
+} else {
+    winget install --id JesseDuffield.lazygit --exact --silent --accept-package-agreements --accept-source-agreements
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to install lazygit with winget."
+    }
+}
+Refresh-Path
+
+Write-Step "Installing mise-managed tools"
+if (-not (Get-Command mise -ErrorAction SilentlyContinue)) {
+    throw "mise was installed, but the mise command was not found."
+}
+$env:MISE_CONFIG_FILE = Join-Path $configRoot "mise\config.toml"
+mise install
+if ($LASTEXITCODE -ne 0) {
+    throw "mise could not install the tools declared in $env:MISE_CONFIG_FILE."
+}
+
+Write-Step "Installing PowerShell modules"
+if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
+    Install-PackageProvider -Name NuGet -MinimumVersion "2.8.5.201" -Force | Out-Null
+}
+$repository = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
+if (-not $repository) {
+    Register-PSRepository -Default
+    $repository = Get-PSRepository -Name PSGallery
+}
+if ($repository.InstallationPolicy -ne "Trusted") {
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+}
+@("posh-git", "Terminal-Icons", "PSFzf", "PSReadLine") |
+    ForEach-Object { Install-RequiredModule -Name $_ }
+
 Write-Step "Configuring XDG_CONFIG_HOME"
 [Environment]::SetEnvironmentVariable("XDG_CONFIG_HOME", $configRoot, "User")
 $env:XDG_CONFIG_HOME = $configRoot
@@ -242,11 +258,9 @@ $profilePaths = @(
     (Join-Path $documents "PowerShell\Microsoft.PowerShell_profile.ps1"),
     (Join-Path $documents "WindowsPowerShell\Microsoft.PowerShell_profile.ps1")
 ) | Select-Object -Unique
-
 foreach ($profilePath in $profilePaths) {
     Add-ProfileLoader -ProfilePath $profilePath
 }
-
 if (-not (Test-Path $profileSource)) {
     throw "PowerShell configuration was not found at $profileSource."
 }
