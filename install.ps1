@@ -210,7 +210,12 @@ foreach ($package in $scoopPackages) {
 Refresh-Path
 
 Write-Step "Installing lazygit"
-$lazygitPath = Join-Path (if ($env:SCOOP) { $env:SCOOP } else { Join-Path $HOME "scoop" }) "apps\lazygit\current"
+if ($env:SCOOP) {
+    $scoopRoot = $env:SCOOP
+} else {
+    $scoopRoot = Join-Path $HOME "scoop"
+}
+$lazygitPath = Join-Path $scoopRoot "apps\lazygit\current"
 if (Test-Path $lazygitPath) {
     Write-Host "  [skip] lazygit"
 } elseif (Get-Command lazygit -ErrorAction SilentlyContinue) {
