@@ -48,8 +48,13 @@ function Install-ScoopPackage {
     param(
         [Parameter(Mandatory)][string]$Package,
         [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)][string]$Command
+        [Parameter(Mandatory)][string]$Command,
+        [string]$InstallSpec
     )
+
+    if (-not $InstallSpec) {
+        $InstallSpec = $Package
+    }
 
     $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $HOME "scoop" }
     $installedPath = Join-Path $scoopRoot "apps\$Package\current"
@@ -65,9 +70,9 @@ function Install-ScoopPackage {
     }
 
     Write-Host "  [install:scoop] $Name"
-    scoop install $Package
+    scoop install $InstallSpec
     if ($LASTEXITCODE -ne 0) {
-        throw "Failed to install $Name with Scoop ($Package)."
+        throw "Failed to install $Name with Scoop ($InstallSpec)."
     }
 }
 
@@ -171,7 +176,7 @@ $scoopPackages = @(
     @{ Package = "ripgrep"; Name = "ripgrep"; Command = "rg" },
     @{ Package = "fd"; Name = "fd"; Command = "fd" },
     @{ Package = "fzf"; Name = "fzf"; Command = "fzf" },
-    @{ Package = "lazygit"; Name = "lazygit"; Command = "lazygit" },
+    @{ Package = "lazygit"; Name = "lazygit"; Command = "lazygit"; InstallSpec = "main/lazygit" },
     @{ Package = "eza"; Name = "eza"; Command = "eza" },
     @{ Package = "bat"; Name = "bat"; Command = "bat" },
     @{ Package = "mise"; Name = "mise"; Command = "mise" },
@@ -179,7 +184,7 @@ $scoopPackages = @(
 )
 
 foreach ($package in $scoopPackages) {
-    Install-ScoopPackage -Package $package.Package -Name $package.Name -Command $package.Command
+    Install-ScoopPackage -Package $package.Package -Name $package.Name -Command $package.Command -InstallSpec $package.InstallSpec
 }
 
 Refresh-Path
