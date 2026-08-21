@@ -25,6 +25,12 @@ function Refresh-Path {
     $env:Path = "$machinePath;$userPath"
 }
 
+function Test-IsAdministrator {
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
 function Install-WingetPackage {
     param(
         [Parameter(Mandatory)][string]$Id,
@@ -270,11 +276,18 @@ if (-not (Test-Path $profileSource)) {
     throw "PowerShell configuration was not found at $profileSource."
 }
 
+$fontNeedsAdmin = $false
 if (-not $SkipFont) {
     Write-Step "Installing Meslo Nerd Font"
-    oh-my-posh font install meslo
-    if ($LASTEXITCODE -ne 0) {
-        Write-Warning "Nerd Font installation failed. Run 'oh-my-posh font install meslo' later."
+    if (Test-IsAdministrator) {
+        oh-my-posh font install meslo
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Nerd Font installation failed. Run 'oh-my-posh font install meslo' later from an Administrator terminal."
+            $fontNeedsAdmin = $true
+        }
+    } else {
+        Write-Host "  [skip] Meslo Nerd Font (administrator privileges required)" -ForegroundColor Yellow
+        $fontNeedsAdmin = $true
     }
 }
 
@@ -289,3 +302,7 @@ if (-not $SkipNeovimSync) {
 Write-Step "Finished"
 Write-Host "Close all terminal windows and open Windows Terminal with PowerShell 7." -ForegroundColor Green
 Write-Host "Dotfiles: $configRoot"
+if ($fontNeedsAdmin) {
+    Write-Host "Optional: install Meslo Nerd Font later from an Administrator terminal:" -ForegroundColor Yellow
+    Write-Host "  oh-my-posh font install meslo" -ForegroundColor Yellow
+}
