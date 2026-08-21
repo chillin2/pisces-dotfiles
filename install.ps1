@@ -240,7 +240,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Step "Installing PowerShell modules"
 if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
-    Install-PackageProvider -Name NuGet -MinimumVersion "2.8.5.201" -Force | Out-Null
+    Install-PackageProvider -Name NuGet -MinimumVersion "2.8.5.201" -Scope CurrentUser -Force | Out-Null
 }
 $repository = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
 if (-not $repository) {
