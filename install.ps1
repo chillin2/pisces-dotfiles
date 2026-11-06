@@ -205,6 +205,7 @@ $scoopPackages = @(
     @{ Package = "ripgrep"; Name = "ripgrep"; Command = "rg" },
     @{ Package = "fd"; Name = "fd"; Command = "fd" },
     @{ Package = "fzf"; Name = "fzf"; Command = "fzf" },
+    @{ Package = "zoxide"; Name = "zoxide"; Command = "zoxide" },
     @{ Package = "eza"; Name = "eza"; Command = "eza" },
     @{ Package = "bat"; Name = "bat"; Command = "bat" },
     @{ Package = "mise"; Name = "mise"; Command = "mise" },
