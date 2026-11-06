@@ -15,12 +15,13 @@ Set-ExecutionPolicy -Scope Process Bypass -Force; irm https://raw.githubusercont
 The installer:
 
 - installs PowerShell 7, Windows Terminal, Git and Oh My Posh with `winget`
-- installs Scoop, then uses it for Neovim, ripgrep, fd, fzf, lazygit, eza, bat, mise and LLVM
+- installs Scoop, then uses it for Neovim, ripgrep, fd, fzf, zoxide, lazygit, eza, bat, mise and LLVM
 - installs the required PowerShell modules
 - clones or updates this repository at `~/.config`
 - sets `XDG_CONFIG_HOME` so Neovim uses `~/.config/nvim`
 - connects both PowerShell 7 and Windows PowerShell profiles
 - backs up an existing profile before changing it
+- initializes zoxide automatically for `z` and `zi` directory jumping
 - activates mise-managed tools automatically in PowerShell when `mise` is available
 - installs Meslo Nerd Font and synchronizes LazyVim plugins
 - can be run again safely to update the setup
@@ -128,6 +129,10 @@ The manual clone does not install dependencies or configure the shell automatica
 - [PSFzf](https://github.com/kelleyma49/PSFzf) - Fuzzy finder
 - [bat](https://github.com/sharkdp/bat) - Syntax-highlighted `cat` replacement and pager-friendly file viewer
 - [mise](https://mise.jdx.dev/) - Development tool and runtime version manager
+
+### Directory jumping
+
+The installer installs zoxide with Scoop, and the PowerShell profile initializes it automatically. Use `cd` to visit directories first, then jump back with `z <name>` or select a match interactively with `zi <name>` (uses fzf).
 
 ### Codex / Python project helper
 
