@@ -35,6 +35,11 @@ if (Get-Command mise -ErrorAction SilentlyContinue) {
   (&mise activate pwsh) | Out-String | Invoke-Expression
 }
 
+# Enable directory jumping with z and interactive selection with zi.
+if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+  zoxide init powershell | Out-String | Invoke-Expression
+}
+
 $env:GIT_SSH = "C:\Windows\system32\OpenSSH\ssh.exe"
 
 # Alias
